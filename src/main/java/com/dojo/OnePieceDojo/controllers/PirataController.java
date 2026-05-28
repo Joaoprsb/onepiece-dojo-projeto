@@ -5,6 +5,8 @@ import com.dojo.OnePieceDojo.entities.Pirata;
 import com.dojo.OnePieceDojo.enums.Racas;
 import com.dojo.OnePieceDojo.services.PirataService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,34 +21,51 @@ public class PirataController {
         this.pirataService = pirataService;
     }
 
-    @PostMapping("/criar")
-    public PirataDTO criarPirata(@Valid @RequestBody PirataDTO pirataDTO) {
-        return pirataService.criarPirata(pirataDTO);
+    @PostMapping
+    public ResponseEntity<PirataDTO> criarPirata(
+            @Valid @RequestBody PirataDTO pirataDTO) {
+        PirataDTO novoPirata = pirataService.criarPirata(pirataDTO);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(novoPirata);
     }
 
-    @PutMapping("/atualizar/{id}")
-    public Pirata atualizarPirata(@PathVariable Long id, @RequestBody Pirata pirataAtualizado) {
-        return pirataService.atualizarPirata(id, pirataAtualizado);
+    @PutMapping("/{id}")
+    public ResponseEntity<Pirata> atualizarPirata(
+            @PathVariable Long id,
+            @RequestBody Pirata pirataAtualizado) {
+        return ResponseEntity.ok(
+                pirataService.atualizarPirata(id, pirataAtualizado)
+        );
     }
 
-    @GetMapping("/buscar/{id}")
-    public Pirata buscarPirataPorId(@PathVariable Long id) {
-        return pirataService.buscarPirataPorID(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<Pirata> buscarPirataPorId(
+            @PathVariable Long id) {
+        return ResponseEntity.ok(
+                pirataService.buscarPirataPorID(id)
+        );
     }
 
-    @GetMapping("/buscarTodos")
-    public List<PirataDTO> buscarTodosPiratas() {
-        return pirataService.buscarTodosPiratas();
+    @GetMapping
+    public ResponseEntity<List<PirataDTO>> buscarTodosPiratas() {
+        return ResponseEntity.ok(
+                pirataService.buscarTodosPiratas()
+        );
     }
 
-    @DeleteMapping("/deletar/{id}")
-    public void deletarPirata(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarPirata(
+            @PathVariable Long id) {
         pirataService.deletarPirata(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/buscarRaca/{raca}")
-    public List<Pirata> buscarPorRaca(@PathVariable Racas raca) {
-        return pirataService.buscarPorRaca(raca);
+    @GetMapping("/raca/{raca}")
+    public ResponseEntity<List<Pirata>> buscarPorRaca(
+            @PathVariable Racas raca) {
+        return ResponseEntity.ok(
+                pirataService.buscarPorRaca(raca)
+        );
     }
-
 }
