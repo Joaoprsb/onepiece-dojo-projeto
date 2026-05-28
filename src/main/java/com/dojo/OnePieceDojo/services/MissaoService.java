@@ -7,6 +7,8 @@ import com.dojo.OnePieceDojo.enums.ClassificacaoMissao;
 import com.dojo.OnePieceDojo.enums.StatusMissao;
 import com.dojo.OnePieceDojo.repositories.MissaoRepository;
 import com.dojo.OnePieceDojo.repositories.PirataRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -53,8 +55,10 @@ public class MissaoService {
                 .orElseThrow(() -> new RuntimeException("Missão não encontrada"));
     }
 
-    public List<Missao> buscarTodasMissoes() {
-        return missaoRepository.findAll();
+    public Page<MissaoDTO> buscarTodasMissoes(Pageable pageable) {
+        Page<Missao> missoes = missaoRepository.findAll(pageable);
+
+        return missoes.map(MissaoDTO::new);
     }
 
     public List<Missao> buscarPorNivelDificuldade(ClassificacaoMissao classificacaoMissao) {
