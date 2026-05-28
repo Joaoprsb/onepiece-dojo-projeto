@@ -5,6 +5,8 @@ import com.dojo.OnePieceDojo.entities.Pirata;
 import com.dojo.OnePieceDojo.enums.Racas;
 import com.dojo.OnePieceDojo.services.PirataService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -48,9 +50,9 @@ public class PirataController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PirataDTO>> buscarTodosPiratas() {
+    public ResponseEntity<Page<PirataDTO>> buscarTodosPiratas(Pageable pageable) {
         return ResponseEntity.ok(
-                pirataService.buscarTodosPiratas()
+                pirataService.buscarTodosPiratas(pageable)
         );
     }
 

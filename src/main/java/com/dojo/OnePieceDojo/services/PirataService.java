@@ -5,6 +5,8 @@ import com.dojo.OnePieceDojo.entities.Pirata;
 import com.dojo.OnePieceDojo.enums.Racas;
 import com.dojo.OnePieceDojo.exception.PirataNotFoundException;
 import com.dojo.OnePieceDojo.repositories.PirataRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -64,19 +66,10 @@ public class PirataService {
         return pirataRepository.findByRaca(raca);
     }
 
-    public List<PirataDTO> buscarTodosPiratas() {
-        List<Pirata> piratas = pirataRepository.findAll();
+    public Page<PirataDTO> buscarTodosPiratas(Pageable pageable) {
+        Page<Pirata> piratas = pirataRepository.findAll(pageable);
 
-        // vai covnerter a lista de entidades para lista de DTOs
-        return piratas.stream()
-                .map(p -> new PirataDTO(
-                        p.getId(),
-                        p.getNome(),
-                        p.getRaca(),
-                        p.getTripulacao(),
-                        p.getStatus()
-                ))
-                .toList();
+        return piratas.map(PirataDTO::new);
     }
 
     public void deletarPirata(Long id) {
