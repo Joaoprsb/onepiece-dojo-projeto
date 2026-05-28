@@ -3,6 +3,7 @@ package com.dojo.OnePieceDojo.services;
 import com.dojo.OnePieceDojo.dtos.PirataDTO;
 import com.dojo.OnePieceDojo.entities.Pirata;
 import com.dojo.OnePieceDojo.enums.Racas;
+import com.dojo.OnePieceDojo.exception.PirataNotFoundException;
 import com.dojo.OnePieceDojo.repositories.PirataRepository;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +42,7 @@ public class PirataService {
         // Busca no banco o pirata que vai ter o ID informado
         // O findById vai retornar
         Pirata pirataExistente = pirataRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pirata não encontrado"));
+                .orElseThrow(() -> new PirataNotFoundException("Pirata não encontrado"));
 
         // Aqui atualiza os dados do pirata com as novas informações
         pirataExistente.setNome(pirataAtualizado.getNome());
@@ -56,7 +57,7 @@ public class PirataService {
 
     public Pirata buscarPirataPorID(Long id) {
         return pirataRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pirata não encontrado"));
+                .orElseThrow(() -> new PirataNotFoundException("Pirata não encontrado"));
     }
 
     public List<Pirata> buscarPorRaca(Racas raca) {
@@ -80,7 +81,7 @@ public class PirataService {
 
     public void deletarPirata(Long id) {
         Pirata pirataAtual = pirataRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pirata não encontrado"));
+                .orElseThrow(() -> new PirataNotFoundException("Pirata não encontrado"));
 
         pirataRepository.delete(pirataAtual);
     }
