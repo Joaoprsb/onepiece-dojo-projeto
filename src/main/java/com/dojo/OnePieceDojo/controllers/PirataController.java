@@ -4,6 +4,7 @@ import com.dojo.OnePieceDojo.dtos.PirataDTO;
 import com.dojo.OnePieceDojo.entities.Pirata;
 import com.dojo.OnePieceDojo.enums.Racas;
 import com.dojo.OnePieceDojo.services.PirataService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class PirataController {
     }
 
     @PostMapping("/criar")
-    public PirataDTO criarPirata(@RequestBody PirataDTO pirataDTO) {
+    public PirataDTO criarPirata(@Valid @RequestBody PirataDTO pirataDTO) {
         return pirataService.criarPirata(pirataDTO);
     }
 
