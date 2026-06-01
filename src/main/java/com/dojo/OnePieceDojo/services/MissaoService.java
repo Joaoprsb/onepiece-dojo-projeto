@@ -5,6 +5,7 @@ import com.dojo.OnePieceDojo.entities.Missao;
 import com.dojo.OnePieceDojo.entities.Pirata;
 import com.dojo.OnePieceDojo.enums.ClassificacaoMissao;
 import com.dojo.OnePieceDojo.enums.StatusMissao;
+import com.dojo.OnePieceDojo.exception.MissaoNotFoundException;
 import com.dojo.OnePieceDojo.repositories.MissaoRepository;
 import com.dojo.OnePieceDojo.repositories.PirataRepository;
 import org.springframework.data.domain.Page;
@@ -26,7 +27,7 @@ public class MissaoService {
 
     public MissaoDTO criarMissao(MissaoDTO missaoDTO){
         Pirata pirata = pirataRepository.findById(missaoDTO.getPirataId())
-                .orElseThrow(() -> new RuntimeException("Pirata não encontrado"));
+                .orElseThrow(() -> new MissaoNotFoundException("Pirata não encontrado"));
 
         Missao missao = new Missao();
         missao.setClassificacaoMissao(missaoDTO.getClassificacaoMissao());
@@ -41,7 +42,7 @@ public class MissaoService {
 
     public MissaoDTO atualizarMissao(Long id, MissaoDTO missaoDTO) {
         Missao missaoExistente = missaoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Missão não encontrada"));
+                .orElseThrow(() -> new MissaoNotFoundException("Missão não encontrada"));
 
         missaoExistente.setClassificacaoMissao(missaoDTO.getClassificacaoMissao());
         missaoExistente.setTipoMissao(missaoDTO.getTipoMissao());
@@ -55,7 +56,7 @@ public class MissaoService {
 
     public MissaoDTO buscarMissaoPorID(Long id) {
         Missao missao = missaoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Missão não encontrada."));
+                .orElseThrow(() -> new MissaoNotFoundException("Missão não encontrada."));
 
         return new MissaoDTO(missao);
     }
