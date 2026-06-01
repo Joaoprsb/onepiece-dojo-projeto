@@ -13,15 +13,12 @@ import java.util.List;
 
 @Service
 public class PirataService {
-
     private final PirataRepository pirataRepository;
 
     public PirataService(PirataRepository pirataRepository) {
         this.pirataRepository = pirataRepository;
     }
 
-    // Cria um novo pirata
-    // Recebe o objeto pirata que vai vir do controller
     public PirataDTO criarPirata(PirataDTO pirataDTO) {
         Pirata pirata = new Pirata();
         pirata.setNome(pirataDTO.getNome());
@@ -31,45 +28,41 @@ public class PirataService {
 
         Pirata salvo = pirataRepository.save(pirata);
 
-        return new PirataDTO(
-                salvo.getId(),
-                salvo.getNome(),
-                salvo.getRaca(),
-                salvo.getTripulacao(),
-                salvo.getStatus()
-        );
+        return new PirataDTO(salvo);
     }
 
-    public Pirata atualizarPirata(Long id, Pirata pirataAtualizado) {
-        // Busca no banco o pirata que vai ter o ID informado
-        // O findById vai retornar
+    public PirataDTO atualizarPirata(Long id, PirataDTO pirataDTO) {
         Pirata pirataExistente = pirataRepository.findById(id)
                 .orElseThrow(() -> new PirataNotFoundException("Pirata não encontrado"));
 
-        // Aqui atualiza os dados do pirata com as novas informações
-        pirataExistente.setNome(pirataAtualizado.getNome());
-        pirataExistente.setRaca(pirataAtualizado.getRaca());
-        pirataExistente.setTripulacao(pirataAtualizado.getTripulacao());
-        pirataExistente.setStatus(pirataAtualizado.getStatus());
+        pirataExistente.setNome(pirataDTO.getNome());
+        pirataExistente.setRaca(pirataDTO.getRaca());
+        pirataExistente.setTripulacao(pirataDTO.getTripulacao());
+        pirataExistente.setStatus(pirataDTO.getStatus());
 
-        // Salva o pirata atualizado no banco (UPDATE)
-        // Pesquisei e o save percebe que já existe um ID e faz a atualização dele ao invés de inserir um
-        return pirataRepository.save(pirataExistente);
-    }
+        Pirata salvo = pirataRepository.save(pirataExistente);
 
-    public Pirata buscarPirataPorID(Long id) {
-        return pirataRepository.findById(id)
-                .orElseThrow(() -> new PirataNotFoundException("Pirata não encontrado"));
-    }
-
-    public List<Pirata> buscarPorRaca(Racas raca) {
-        return pirataRepository.findByRaca(raca);
+        return new PirataDTO(salvo);
     }
 
     public Page<PirataDTO> buscarTodosPiratas(Pageable pageable) {
         Page<Pirata> piratas = pirataRepository.findAll(pageable);
 
         return piratas.map(PirataDTO::new);
+    }
+
+    public PirataDTO buscarPirataPorID(Long id) {
+        Pirata pirata = pirataRepository.findById(id)
+                .orElseThrow(() -> new PirataNotFoundException("Pirata não encontrado."));
+
+        return new PirataDTO(pirata);
+    }
+
+    public List<PirataDTO> buscarPorRaca(Racas raca) {
+        return pirataRepository.findByRaca(raca)
+                .stream()
+                .map(PirataDTO::new)
+                .toList();
     }
 
     public void deletarPirata(Long id) {

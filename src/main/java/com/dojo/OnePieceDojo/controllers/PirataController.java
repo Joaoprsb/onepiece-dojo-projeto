@@ -1,7 +1,6 @@
 package com.dojo.OnePieceDojo.controllers;
 
 import com.dojo.OnePieceDojo.dtos.PirataDTO;
-import com.dojo.OnePieceDojo.entities.Pirata;
 import com.dojo.OnePieceDojo.enums.Racas;
 import com.dojo.OnePieceDojo.services.PirataService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -44,11 +43,19 @@ public class PirataController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualiza um pirata")
-    public ResponseEntity<Pirata> atualizarPirata(
+    public ResponseEntity<PirataDTO> atualizarPirata(
             @PathVariable Long id,
-            @RequestBody Pirata pirataAtualizado) {
+            @RequestBody PirataDTO pirataDTO) {
         return ResponseEntity.ok(
-                pirataService.atualizarPirata(id, pirataAtualizado)
+                pirataService.atualizarPirata(id, pirataDTO)
+        );
+    }
+
+    @GetMapping
+    @Operation(summary = "Lista todos os piratas com paginação")
+    public ResponseEntity<Page<PirataDTO>> buscarTodosPiratas(Pageable pageable) {
+        return ResponseEntity.ok(
+                pirataService.buscarTodosPiratas(pageable)
         );
     }
 
@@ -58,18 +65,19 @@ public class PirataController {
             @ApiResponse(responseCode = "200", description = "Pirata encontrado."),
             @ApiResponse(responseCode = "404", description = "Pirata não encontrado.")
     })
-    public ResponseEntity<Pirata> buscarPirataPorId(
+    public ResponseEntity<PirataDTO> buscarPirataPorId(
             @PathVariable Long id) {
         return ResponseEntity.ok(
                 pirataService.buscarPirataPorID(id)
         );
     }
 
-    @GetMapping
-    @Operation(summary = "Lista todos os piratas com paginação")
-    public ResponseEntity<Page<PirataDTO>> buscarTodosPiratas(Pageable pageable) {
+    @GetMapping("/raca/{raca}")
+    @Operation(summary = "Busca um pirata por raça")
+    public ResponseEntity<List<PirataDTO>> buscarPorRaca(
+            @PathVariable Racas raca) {
         return ResponseEntity.ok(
-                pirataService.buscarTodosPiratas(pageable)
+                pirataService.buscarPorRaca(raca)
         );
     }
 
@@ -83,14 +91,5 @@ public class PirataController {
             @PathVariable Long id) {
         pirataService.deletarPirata(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/raca/{raca}")
-    @Operation(summary = "Busca um pirata por raça")
-    public ResponseEntity<List<Pirata>> buscarPorRaca(
-            @PathVariable Racas raca) {
-        return ResponseEntity.ok(
-                pirataService.buscarPorRaca(raca)
-        );
     }
 }
