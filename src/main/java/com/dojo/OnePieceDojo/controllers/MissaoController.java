@@ -1,7 +1,6 @@
 package com.dojo.OnePieceDojo.controllers;
 
 import com.dojo.OnePieceDojo.dtos.MissaoDTO;
-import com.dojo.OnePieceDojo.entities.Missao;
 import com.dojo.OnePieceDojo.enums.ClassificacaoMissao;
 import com.dojo.OnePieceDojo.enums.StatusMissao;
 import com.dojo.OnePieceDojo.services.MissaoService;
@@ -51,26 +50,12 @@ public class MissaoController {
             @ApiResponse(responseCode = "200", description = "Missão atualizada com sucesso"),
             @ApiResponse(responseCode = "404", description = "Missão não encontrada")
     })
-    public ResponseEntity<Missao> atualizarMissao(
+    public ResponseEntity<MissaoDTO> atualizarMissao(
             @PathVariable Long id,
-            @RequestBody Missao missao) {
+            @RequestBody MissaoDTO missaoDTO) {
 
         return ResponseEntity.ok(
-                missaoService.atualizarMissao(id, missao)
-        );
-    }
-
-    @GetMapping("/{id}")
-    @Operation(summary = "Busca uma missão pelo ID")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Missão encontrada"),
-            @ApiResponse(responseCode = "404", description = "Missão não encontrada")
-    })
-    public ResponseEntity<Missao> buscarMissaoPorId(
-            @PathVariable Long id) {
-
-        return ResponseEntity.ok(
-                missaoService.buscarMissaoPorID(id)
+                missaoService.atualizarMissao(id, missaoDTO)
         );
     }
 
@@ -87,12 +72,26 @@ public class MissaoController {
         );
     }
 
+    @GetMapping("/{id}")
+    @Operation(summary = "Busca uma missão pelo ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Missão encontrada"),
+            @ApiResponse(responseCode = "404", description = "Missão não encontrada")
+    })
+    public ResponseEntity<MissaoDTO> buscarMissaoPorId(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                missaoService.buscarMissaoPorID(id)
+        );
+    }
+
     @GetMapping("/classificacao/{classificacaoMissao}")
     @Operation(summary = "Busca missões pela classificação")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Missões encontradas")
     })
-    public ResponseEntity<List<Missao>> buscarPorNivelDificuldade(
+    public ResponseEntity<List<MissaoDTO>> buscarPorNivelDificuldade(
             @PathVariable ClassificacaoMissao classificacaoMissao) {
 
         return ResponseEntity.ok(
@@ -105,7 +104,7 @@ public class MissaoController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Missões encontradas")
     })
-    public ResponseEntity<List<Missao>> buscarPorStatusMissao(
+    public ResponseEntity<List<MissaoDTO>> buscarPorStatusMissao(
             @PathVariable StatusMissao statusMissao) {
 
         return ResponseEntity.ok(

@@ -39,20 +39,25 @@ public class MissaoService {
         return new MissaoDTO(salvo);
     }
 
-    public Missao atualizarMissao(Long id, Missao missaoAtualizada) {
+    public MissaoDTO atualizarMissao(Long id, MissaoDTO missaoDTO) {
         Missao missaoExistente = missaoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Missão não encontrada"));
 
-        missaoExistente.setClassificacaoMissao(missaoAtualizada.getClassificacaoMissao());
-        missaoExistente.setTipoMissao(missaoAtualizada.getTipoMissao());
-        missaoExistente.setStatusMissao(missaoAtualizada.getStatusMissao());
+        missaoExistente.setClassificacaoMissao(missaoDTO.getClassificacaoMissao());
+        missaoExistente.setTipoMissao(missaoDTO.getTipoMissao());
+        missaoExistente.setStatusMissao(missaoDTO.getStatusMissao());
 
-        return missaoRepository.save(missaoExistente);
+        Missao missaoSalva = missaoRepository.save(missaoExistente);
+
+        return new MissaoDTO(missaoSalva);
+
     }
 
-    public Missao buscarMissaoPorID(Long id) {
-        return missaoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Missão não encontrada"));
+    public MissaoDTO buscarMissaoPorID(Long id) {
+        Missao missao = missaoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Missão não encontrada."));
+
+        return new MissaoDTO(missao);
     }
 
     public Page<MissaoDTO> buscarTodasMissoes(Pageable pageable) {
@@ -61,11 +66,17 @@ public class MissaoService {
         return missoes.map(MissaoDTO::new);
     }
 
-    public List<Missao> buscarPorNivelDificuldade(ClassificacaoMissao classificacaoMissao) {
-        return missaoRepository.findByClassificacaoMissao(classificacaoMissao);
+    public List<MissaoDTO> buscarPorNivelDificuldade(ClassificacaoMissao classificacaoMissao) {
+        return missaoRepository.findByClassificacaoMissao(classificacaoMissao)
+                .stream()
+                .map(MissaoDTO::new)
+                .toList();
     }
 
-    public List<Missao> buscarPorStatusMissao(StatusMissao statusMissao) {
-        return missaoRepository.findByStatusMissao(statusMissao);
+    public List<MissaoDTO> buscarPorStatusMissao(StatusMissao statusMissao) {
+        return missaoRepository.findByStatusMissao(statusMissao)
+                .stream()
+                .map(MissaoDTO::new)
+                .toList();
     }
 }
