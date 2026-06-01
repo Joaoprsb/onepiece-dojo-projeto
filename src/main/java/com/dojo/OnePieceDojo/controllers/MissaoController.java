@@ -29,7 +29,7 @@ public class MissaoController {
         this.missaoService = missaoService;
     }
 
-    @PostMapping("/criar")
+    @PostMapping
     @Operation(summary = "Cria uma nova missão")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Missão criada com sucesso"),
@@ -45,7 +45,7 @@ public class MissaoController {
                 .body(novaMissao);
     }
 
-    @PutMapping("/atualizar/{id}")
+    @PutMapping("/{id}")
     @Operation(summary = "Atualiza uma missão")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Missão atualizada com sucesso"),
@@ -60,7 +60,7 @@ public class MissaoController {
         );
     }
 
-    @GetMapping("/buscar/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "Busca uma missão pelo ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Missão encontrada"),
@@ -74,7 +74,7 @@ public class MissaoController {
         );
     }
 
-    @GetMapping("/buscarTodas")
+    @GetMapping
     @Operation(summary = "Lista todas as missões com paginação")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de missões retornada com sucesso")
@@ -87,7 +87,7 @@ public class MissaoController {
         );
     }
 
-    @GetMapping("/danger/{classificacaoMissao}")
+    @GetMapping("/classificacao/{classificacaoMissao}")
     @Operation(summary = "Busca missões pela classificação")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Missões encontradas")
